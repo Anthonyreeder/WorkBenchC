@@ -37,17 +37,14 @@ namespace WorkBenchC
 
             //extract script using HtmlAgility
             var scripts = document.GetElementbyId("__NEXT_DATA__");
-            
-            //deserialize json
-            var routes_list = (JObject)JsonConvert.DeserializeObject(scripts.InnerText);
-            var result = routes_list.Descendants()
-                 .OfType<JProperty>()
-                 .FirstOrDefault(x => x.Name == "addToCartForm")
-                 ?.Value;
 
-            //parse ID from JSON
+            //get ATC raw value from json
+            var result = retrieveValue(scripts.InnerText, "addToCartForm");
+
+            //parse ID from atc JSON
             var id = parseRawJToken(result, "pokemon/", "/form");
 
+            //prepare json for atc request
             Dictionary<string, string> post = new Dictionary<string, string>();
             string postData = "{\"productURI\":\"/carts/items/pokemon/"+id+"/form\",\"quantity\":1}"; //Hardcode payload atm
 
@@ -122,6 +119,16 @@ namespace WorkBenchC
                     addToCartUrl.IndexOf(end) - addToCartUrl.IndexOf(start)).Substring(start.Length);
 
             return encodedUrl;
+        }
+        static JToken retrieveValue(string source, string value)
+        {
+            var routes_list = (JObject)JsonConvert.DeserializeObject(source);
+            var result = routes_list.Descendants()
+                 .OfType<JProperty>()
+                 .FirstOrDefault(x => x.Name == value)
+                 ?.Value;
+
+            return result;
         }
     }
 }
