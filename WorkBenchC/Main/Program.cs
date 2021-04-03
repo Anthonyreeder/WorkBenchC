@@ -46,7 +46,7 @@ namespace WorkBenchC
                  ?.Value;
 
             //parse ID from JSON
-            var id = ParseRawJToken(result, "pokemon/", "/form");
+            var id = parseRawJToken(result, "pokemon/", "/form");
 
             Dictionary<string, string> post = new Dictionary<string, string>();
             string postData = "{\"productURI\":\"/carts/items/pokemon/"+id+"/form\",\"quantity\":1}"; //Hardcode payload atm
@@ -114,7 +114,7 @@ namespace WorkBenchC
 
             return headers;
         }
-        static string ParseRawJToken(JToken raw, string start, string end)
+        static string parseRawJToken(JToken raw, string start, string end)
         {
             var addToCartUrl = raw.ToString();
             var encodedUrl = addToCartUrl.Substring(
