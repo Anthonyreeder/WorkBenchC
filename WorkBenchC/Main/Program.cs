@@ -18,7 +18,7 @@ namespace WorkBenchC
     class Program
     {
         /// <summary>
-        /// Main page used as a test page. To be moved to site model when finished.
+        /// Main used as a test. To be moved to site model when finished.
         /// </summary>
         /// <param name="args"></param>
         static void Main(string[] args)
