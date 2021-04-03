@@ -84,7 +84,9 @@ namespace WorkBenchC.Network
             
         }
 
+
         //response functions
+
         //GET request and return page source as string value
         public async Task<string> readStringResponseAsync(string url)
         {
@@ -156,20 +158,17 @@ namespace WorkBenchC.Network
             requestStream.Close();
 
             //response
-            HttpWebResponse myHttpWebResponse = (HttpWebResponse)myWebRequest.GetResponse();
-
-            Stream responseStream = myHttpWebResponse.GetResponseStream();
-
-            StreamReader myStreamReader = new StreamReader(responseStream, Encoding.Default);
-
-            string pageContent = myStreamReader.ReadToEnd();
-
-            myStreamReader.Close();
-            responseStream.Close();
-
-            myHttpWebResponse.Close();
-
-            return pageContent;          
+            using (HttpWebResponse myHttpWebResponse = (HttpWebResponse)myWebRequest.GetResponse())
+            {
+                using (Stream responseStream = myHttpWebResponse.GetResponseStream())
+                {
+                    using (StreamReader myStreamReader = new StreamReader(responseStream, Encoding.Default))
+                    {
+                        string pageContent = myStreamReader.ReadToEnd();
+                        return pageContent;
+                    }
+                }
+            }          
         }
 
 
