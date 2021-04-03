@@ -138,21 +138,8 @@ namespace WorkBenchC.Network
 
         //this was just hacked together really need more thought into this at some point.
         //as requests become more complicated this may be worth expanding into its own class.
-        public async Task<string> postData(string url, Dictionary<string, string> postParameters)
+        public async Task<string> postData(string url, string postData)
         {
-            string postData = "{\"productURI\":\"/carts/items/pokemon/qgqvhkjxgays2mbzgm4dg=/form\",\"quantity\":1}"; //Hardcode payload atm
-
-        //    var last = postParameters.Keys.Last();
-            foreach (string key in postParameters.Keys)
-            {
-                string and = "&";
-             //   if (key.Equals(last))
-            //    {
-           //        and = "";
-           //     }
-                postData += HttpUtility.UrlEncode(key) + "="
-                      + HttpUtility.UrlEncode(postParameters[key]) + and;
-            }
 
             myWebRequest = (HttpWebRequest)HttpWebRequest.Create(url);
             prepareRequest(myWebRequest);
