@@ -38,15 +38,13 @@ namespace WorkBenchC
             //extract script using HtmlAgility
             var scripts = document.GetElementbyId("__NEXT_DATA__");
 
-            //get ATC raw value from json
-            var result = retrieveValue(scripts.InnerText, "addToCartForm");
-
-            //parse ID from atc JSON
-            var id = parseRawJToken(result, "pokemon/", "/form");
+            //get ATC value from json
+            var idRaw = retrieveValue(scripts.InnerText, "addToCartForm");
+            var idFormatted = parseRawJToken(idRaw, "pokemon/", "/form");
 
             //prepare json for atc request
             Dictionary<string, string> post = new Dictionary<string, string>();
-            string postData = "{\"productURI\":\"/carts/items/pokemon/"+id+"/form\",\"quantity\":1}"; //Hardcode payload atm
+            string postData = "{\"productURI\":\"/carts/items/pokemon/"+ idFormatted + "/form\",\"quantity\":1}"; //Hardcode payload atm
 
             //atc request
             string postAtc = request.postData("https://www.pokemoncenter.com/tpci-ecommweb-api/cart?type=product&format=zoom.nodatalinks", postData).Result;
@@ -59,13 +57,10 @@ namespace WorkBenchC
             string postAddressFormat = request.postData("https://www.pokemoncenter.com/tpci-ecommweb-api/address?format=zoom.nodatalinks", serializeAddressFormatted).Result;
 
             //Payment key Id
-            string keyId = request.readStringResponseAsync("https://www.pokemoncenter.com/tpci-ecommweb-api/payment/key?microform=true&locale=en-US").Result;
-            var routes_list2 = (JObject)JsonConvert.DeserializeObject(keyId);
-            var result2 = routes_list2.Descendants()
-                 .OfType<JProperty>()
-                 .FirstOrDefault(x => x.Name == "keyId")
-                 ?.Value;
-            CyberSourcev2 test = new CyberSourcev2(result2.ToString());
+            string keyIdRaw = request.readStringResponseAsync("https://www.pokemoncenter.com/tpci-ecommweb-api/payment/key?microform=true&locale=en-US").Result;
+            var keyIdFormatted = retrieveValue(keyIdRaw, "keyId");
+
+            CyberSourcev2 test = new CyberSourcev2(keyIdFormatted.ToString());
 
             Console.ReadLine();
         }
